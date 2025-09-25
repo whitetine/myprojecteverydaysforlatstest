@@ -1,0 +1,63 @@
+<?php if (isset($_GET['error']) || isset($_GET['success'])): ?>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      <?php if (isset($_GET['error'])): ?>
+        // ✴️ 錯誤情況開始 ✴️
+        let msg = "";
+
+        switch ("<?= $_GET['error'] ?>") {
+          case "empty":
+            msg = "請填寫所有欄位";          // ✅ 對應：?error=empty
+            break;
+          case "mismatch":
+            msg = "新密碼與確認密碼不一致";  // ✅ 對應：?error=mismatch
+            break;
+          case "wrongold":
+            msg = "舊密碼錯誤，請重新輸入";  // ✅ 對應：?error=wrongold
+            break;
+          default:
+            msg = "未知錯誤";               // ✅ 對應：其他錯誤代碼
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: '錯誤！',
+          text: msg,
+          showClass: {
+            popup: 'animate__animated animate__shakeX'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
+
+      <?php elseif (isset($_GET['success'])): ?>
+        // ✅ 成功情況開始 ✅
+        let msg = "";
+
+        switch ("<?= $_GET['success'] ?>") {
+          case "pwd_changed":
+            msg = "密碼修改成功！";       // ✅ 對應：?success=pwd_changed
+            break;
+          case "register":
+            msg = "註冊成功，請登入！";   // ✅ 對應：?success=register
+            break;
+          default:
+            msg = "操作成功！";           // ✅ 對應：其他成功代碼
+        }
+
+        Swal.fire({
+          icon: 'success',
+          title: '成功！',
+          text: msg,
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
+      <?php endif; ?>
+    });
+  </script>
+<?php endif; ?>
