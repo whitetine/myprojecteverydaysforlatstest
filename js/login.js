@@ -119,33 +119,34 @@ createApp({
       }
     };
 
-    const loginSubmit = async ()=>{
-      clearError();
-      if (!login.acc || !login.pas) {
-        setError('請輸入帳號與密碼。');
-        return;
-      }
-      loading.value = true;
-      try{
-        // 與你的舊後端相容：api.php?do=login_sub
-        const res = await fetch('api.php?do=login_sub', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' },
-          body: new URLSearchParams({ acc: login.acc, pas: login.pas })
-        });
+const loginSubmit = async ()=>{
+  clearError();
+  if (!login.acc) { setError('請先輸入帳號'); focusAccount(); return; }
+  if (!login.pas) { setError('請輸入密碼'); focusPassword(); return; }
 
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || '登入失敗');
-        }
-        // 成功：導到 main.php
-        location.href = 'main.php';
-      }catch(e){
-        setError(e.message || '登入失敗，請稍後再試。');
-      }finally{
-        loading.value = false;
-      }
-    };
+  loading.value = true;
+  try{
+    const res = await fetch('api.php?do=login_sub', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: new URLSearchParams({ acc: login.acc, pas: login.pas })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) {
+      if (data.code === 'ACCOUNT_NOT_FOUND') focusAccount();
+      if (data.code === 'WRONG_PASSWORD') focusPassword();
+      return setError(data.msg || '登入失敗');
+    }
+
+    // 成功
+    location.href = 'main.php';
+  }catch(e){
+    setError('伺服器錯誤，請稍後再試');
+  }finally{
+    loading.value = false;
+  }
+};
 
     // 小工具
     const sleep = (ms)=> new Promise(r=>setTimeout(r, ms));

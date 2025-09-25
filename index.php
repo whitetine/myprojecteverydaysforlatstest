@@ -10,7 +10,7 @@ $_SESSION = [];
   <title>專題日總彙-登入</title>
 
   <?php include "head.php"; ?> <!-- 確保這裡有 Vue 3 (global)、Bootstrap 5、Font Awesome（可選）、SweetAlert2（可選） -->
-  <link rel="stylesheet" href="css/main.css?v=<?= time() ?>" />
+  <!-- <link rel="stylesheet" href="css/main.css?v=<?= time() ?>" /> -->
   <link rel="stylesheet" href="css/login.css?v=<?= time() ?>" />
 </head>
 

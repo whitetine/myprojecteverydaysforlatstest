@@ -5,41 +5,61 @@ $do = $_GET['do'] ?? '';
 
 switch ($do) {
     // 登入
-    case 'login_sub':
-        $stmt = $conn->prepare("SELECT * FROM userdata WHERE u_ID = ? AND u_password = ?");
-        $stmt->execute([$p['acc'] ?? '', $p['pas'] ?? '']);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+   case 'login_sub':
+    header('Content-Type: application/json; charset=utf-8');
 
-        if ($user) {
-            $_SESSION['u_ID']   = $user['u_ID'];
-            $_SESSION['u_name'] = $user['u_name'];
-            $_SESSION['u_img']  = $user['u_img'] ?? null;
+    $acc = trim($p['acc'] ?? '');
+    $pas = trim($p['pas'] ?? '');
 
-            $roles = fetchAll(query("
-                SELECT r.role_ID, r.role_name
-                FROM userrolesdata ur
-                JOIN roledata r ON ur.role_ID = r.role_ID
-                WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
-            "));
-            $count = rowCount(query("
-                SELECT r.role_ID, r.role_name
-                FROM userrolesdata ur
-                JOIN roledata r ON ur.role_ID = r.role_ID
-                WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
-            "));
-            if ($count == 1) {
-                $_SESSION['role_ID']   = $roles[0]['role_ID'];
-                $_SESSION['role_name'] = $roles[0]['role_name'];
-                echo json_encode("登入成功");
-            } elseif ($count > 1) {
-                echo json_encode('登入成功，請選擇登入身分');
-            } else {
-                echo json_encode('此帳號尚未設定任何角色');
-            }
-        } else {
-            echo json_encode('帳號或密碼錯誤');
-        }
-        break;
+    if ($acc === '' || $pas === '') {
+        http_response_code(400);
+        echo json_encode(['ok'=>false,'code'=>'BAD_REQUEST','msg'=>'請輸入帳號與密碼']);
+        exit;
+    }
+
+    // 查帳號
+    $st = $conn->prepare("SELECT * FROM userdata WHERE u_ID = ?");
+    $st->execute([$acc]);
+    $user = $st->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        http_response_code(404);
+        echo json_encode(['ok'=>false,'code'=>'ACCOUNT_NOT_FOUND','msg'=>'帳號未註冊，請重新確認']);
+        exit;
+    }
+
+    // 驗證密碼（這裡你們是明碼，沒有 hash）
+    if ($user['u_password'] !== $pas) {
+        http_response_code(401);
+        echo json_encode(['ok'=>false,'code'=>'WRONG_PASSWORD','msg'=>'密碼錯誤']);
+        exit;
+    }
+
+    // 驗證成功 → 設 session
+    $_SESSION['u_ID']   = $user['u_ID'];
+    $_SESSION['u_name'] = $user['u_name'];
+    $_SESSION['u_img']  = $user['u_img'] ?? null;
+
+    // 查角色
+    $roles = fetchAll(query("
+        SELECT r.role_ID, r.role_name
+        FROM userrolesdata ur
+        JOIN roledata r ON ur.role_ID = r.role_ID
+        WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
+    "));
+    $count = count($roles);
+
+    if ($count == 1) {
+        $_SESSION['role_ID']   = $roles[0]['role_ID'];
+        $_SESSION['role_name'] = $roles[0]['role_name'];
+        echo json_encode(['ok'=>true,'code'=>'OK','msg'=>'登入成功']);
+    } elseif ($count > 1) {
+        echo json_encode(['ok'=>true,'code'=>'MULTI_ROLE','msg'=>'登入成功，請選擇登入身分']);
+    } else {
+        echo json_encode(['ok'=>false,'code'=>'NO_ROLE','msg'=>'此帳號尚未設定任何角色']);
+    }
+    exit;
+
 
     // 角色清單（啟用）
     case 'role_choose':
