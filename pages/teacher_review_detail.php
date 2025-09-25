@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../../pdo.php';
+require '../includes/pdo.php';
 
 
 

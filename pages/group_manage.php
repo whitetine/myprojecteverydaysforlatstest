@@ -1,5 +1,5 @@
 <?php
-include "../includes/pdo.php";
+require '../includes/pdo.php';
 $groups = $conn->query("SELECT * FROM `groupdata`")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

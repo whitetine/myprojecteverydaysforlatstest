@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include "../../pdo.php";
+require '../includes/pdo.php';
 
 try {
   $pdo = new PDO($dsn, $user, $pass, [

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../pdo.php");
+require '../includes/pdo.php';
 
 // if (!isset($_SESSION['acc'])) {
 //     header("Location: index.php");

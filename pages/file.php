@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../includes/pdo.php";
+require '../includes/pdo.php';
 ?>
 <!DOCTYPE html>
 <html lang="zh-Hant">

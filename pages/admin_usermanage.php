@@ -1,7 +1,7 @@
   <h1 class="mb-4">帳號管理</h1>
 
 <?php
-include "../includes/pdo.php";
+require '../includes/pdo.php';
 
 $sql = "SELECT u.*, r.*,s.*,c.*
         FROM userdata u

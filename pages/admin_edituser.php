@@ -1,5 +1,5 @@
 <?php
-include "../includes/pdo.php";
+require '../includes/pdo.php';
 
 $u_ID = $_GET['u_ID'] ?? '';
 if (!$u_ID) {
