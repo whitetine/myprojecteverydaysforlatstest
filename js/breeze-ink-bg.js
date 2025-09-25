@@ -4,7 +4,7 @@
      <script src="js/breeze-ink-bg.js"></script>
    全域 API（與你現有相容）：
      circuitBgPulse(x?,y?) / circuitBgSetMode(m) / circuitBgSetSpeed(n) / circuitBgSetDensity(n)
-*/ㄑ
+*/
 (function () {
   if (window.__breezeInkLoaded) return;
   window.__breezeInkLoaded = true;

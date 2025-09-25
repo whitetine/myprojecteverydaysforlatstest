@@ -22,13 +22,13 @@ const tpl = `
           <h1 class="title">專題日總彙</h1>
 
           <div class="input-group">
-            <label for="acc">帳號</label>
+            <!-- <label for="acc">帳號</label> -->
             <input id="acc" v-model.trim="login.acc" type="text" inputmode="text"
                    autocomplete="username" placeholder="請輸入帳號" @keyup.enter="focusPassword" />
           </div>
 
           <div class="input-group" v-if="hasAccount">
-            <label for="pas">密碼</label>
+            <!-- <label for="pas">密碼</label> -->
             <input :type="showPassword ? 'text':'password'"
                    id="pas" v-model.trim="login.pas" autocomplete="current-password"
                    placeholder="請輸入密碼" @keyup.enter="loginSubmit" />
@@ -38,7 +38,7 @@ const tpl = `
                @click="showPassword = !showPassword"></i>
           </div>
 
-          <button class="submit-btn" type="submit" :disabled="loading">
+          <button class="btn btn-info submit-btn" type="submit" :disabled="loading">
             {{ loading ? '登入中…' : '登入' }}
           </button>
 
@@ -56,7 +56,7 @@ const tpl = `
             <h5 class="mb-3">忘記密碼</h5>
             <input v-model.trim="forgotAccount" type="text" class="form-control mb-3" placeholder="請輸入帳號">
             <div class="d-grid gap-2">
-              <button class="btn btn-primary" @click="sendForgot">送出</button>
+              <button class="btn btn-info" @click="sendForgot">送出</button>
               <button class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
             </div>
           </div>
