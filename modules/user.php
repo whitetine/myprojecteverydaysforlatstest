@@ -1,45 +1,73 @@
 <?php
+session_start();
+require 'includes/pdo.php';       // 依實際路徑
+header('Content-Type: application/json; charset=utf-8');
 global $conn;
 $p  = $_POST;
 $do = $_GET['do'] ?? '';
 
+function jok($msg='', $extra=[])  { echo json_encode(['ok'=>true,  'msg'=>$msg] + $extra);  exit; }
+function jfail($msg='', $extra=[]) { echo json_encode(['ok'=>false, 'msg'=>$msg] + $extra); exit; }
+
 switch ($do) {
     // 登入
-    case 'login_sub':
-        $stmt = $conn->prepare("SELECT * FROM userdata WHERE u_ID = ? AND u_password = ?");
-        $stmt->execute([$p['acc'] ?? '', $p['pas'] ?? '']);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+     case 'login_sub':
+    $acc = $p['acc'] ?? '';
+    $pas = $p['pas'] ?? '';
 
-        if ($user) {
-            $_SESSION['u_ID']   = $user['u_ID'];
-            $_SESSION['u_name'] = $user['u_name'];
-            $_SESSION['u_img']  = $user['u_img'] ?? null;
+    if ($acc==='' || $pas==='') jfail('請輸入帳號與密碼');
 
-            $roles = fetchAll(query("
-                SELECT r.role_ID, r.role_name
-                FROM userrolesdata ur
-                JOIN roledata r ON ur.role_ID = r.role_ID
-                WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
-            "));
-            $count = rowCount(query("
-                SELECT r.role_ID, r.role_name
-                FROM userrolesdata ur
-                JOIN roledata r ON ur.role_ID = r.role_ID
-                WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
-            "));
-            if ($count == 1) {
-                $_SESSION['role_ID']   = $roles[0]['role_ID'];
-                $_SESSION['role_name'] = $roles[0]['role_name'];
-                echo json_encode("登入成功");
-            } elseif ($count > 1) {
-                echo json_encode('登入成功，請選擇登入身分');
-            } else {
-                echo json_encode('此帳號尚未設定任何角色');
-            }
-        } else {
-            echo json_encode('帳號或密碼錯誤');
-        }
-        break;
+    $stmt = $conn->prepare("SELECT * FROM userdata WHERE u_ID = ? AND u_password = ?");
+    $stmt->execute([$acc, $pas]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) jfail('帳號或密碼錯誤');
+
+    $_SESSION['u_ID']   = $user['u_ID'];
+    $_SESSION['u_name'] = $user['u_name'];
+    $_SESSION['u_img']  = $user['u_img'] ?? null;
+
+    // 角色判斷（依你原本）
+    $roles = $conn->query("
+      SELECT r.role_ID, r.role_name
+      FROM userrolesdata ur
+      JOIN roledata r ON ur.role_ID = r.role_ID
+      WHERE ur.u_ID = ".$conn->quote($user['u_ID'])." AND ur.user_role_status = 1
+    ")->fetchAll(PDO::FETCH_ASSOC);
+    $count = count($roles);
+
+    if ($count === 1) {
+      $_SESSION['role_ID']   = $roles[0]['role_ID'];
+      $_SESSION['role_name'] = $roles[0]['role_name'];
+      jok('登入成功');
+    } elseif ($count > 1) {
+      jok('登入成功，請選擇登入身分', ['needRole'=>true, 'roles'=>$roles]);
+    } else {
+      jfail('此帳號尚未設定任何角色');
+    }
+    break;
+
+  case 'forgot_password':
+    $acc = trim($p['acc'] ?? '');
+    if ($acc==='') jfail('請先輸入帳號');
+
+    // 檢查帳號存在
+    $st = $conn->prepare("SELECT u_gmail FROM userdata WHERE u_ID = ?");
+    $st->execute([$acc]);
+    $email = $st->fetchColumn();
+
+    if (!$email) jfail('查無此帳號');
+
+    // TODO：在這裡真的寄信（或寫入重設 token）
+    // mail($email, '重設密碼', '請點擊連結...');
+
+    jok('已送出重設郵件至 ' . $email);
+    break;
+
+  default:
+    http_response_code(404);
+    echo json_encode(['ok'=>false,'msg'=>'Unknown API']);
+    exit;
 
     // 角色清單（啟用）
     case 'role_choose':

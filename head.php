@@ -1,7 +1,7 @@
 
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
-<link rel="stylesheet" href="css/main.css?v=<?= time() ?>">
+<!-- <link rel="stylesheet" href="css/main.css?v=<?= time() ?>"> -->
 <style>
 /* 關掉 Edge/IE 內建的「顯示密碼」與清除鈕 */
 #inputPassword::-ms-reveal,
