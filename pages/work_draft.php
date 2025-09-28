@@ -2,10 +2,10 @@
 session_start();
 require '../includes/pdo.php';
 
-if (!isset($_SESSION['u_ID'])) {
-    echo "<script>alert('請先登入');location.href='index.php';</script>";
-    exit;
-}
+// if (!isset($_SESSION['u_ID'])) {
+//     echo "<script>alert('請先登入');location.href='index.php';</script>";
+//     exit;
+// }
 date_default_timezone_set('Asia/Taipei');
 
 $u_ID  = $_SESSION['u_ID'];

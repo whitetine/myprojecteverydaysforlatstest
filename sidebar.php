@@ -98,8 +98,8 @@ $role_ID = $_SESSION['role_ID'] ?? null;
           <a class="nav-link ajax-link" href="pages/work_draft.php">
       <i class="fa-solid fa-file-lines"></i><span>工作日誌</span></a>
 
-          <a class="nav-link ajax-link" href="pages/work_save.php">
-      <i class="fa-solid fa-file-lines"></i><span>工作日誌</span></a>
+          <a class="nav-link ajax-link" href="pages/work_form.php">
+      <i class="fa-solid fa-file-lines"></i><span>work_form</span></a>
       <?php elseif ($role_ID == 6): ?>
  <a class="nav-link ajax-link" href="pages/apply.php">
       <i class="fa-solid fa-file-lines"></i><span>文件管理</span>

@@ -142,7 +142,8 @@ const loginSubmit = async ()=>{
     // 成功
     location.href = 'main.php';
   }catch(e){
-    setError('伺服器錯誤，請稍後再試');
+    // setError('伺服器錯誤，請稍後再試');
+    setError("此為未註冊帳號，請重新輸入");
   }finally{
     loading.value = false;
   }
