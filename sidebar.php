@@ -96,7 +96,9 @@ $role_ID = $_SESSION['role_ID'] ?? null;
        <a class="nav-link ajax-link" href="pages/teacher_review_status.php">
       <i class="fa-solid fa-file-lines"></i><span>互評(status)</span></a>
           <a class="nav-link ajax-link" href="pages/work_draft.php">
-      <i class="fa-solid fa-file-lines"></i><span>工作日誌</span></a>
+      <i class="fa-solid fa-file-lines"></i><span>work_draft</span></a>
+          <a class="nav-link ajax-link" href="pages/work_save.php">
+      <i class="fa-solid fa-file-lines"></i><span>work_save</span></a>
 
           <a class="nav-link ajax-link" href="pages/work_form.php">
       <i class="fa-solid fa-file-lines"></i><span>work_form</span></a>

@@ -9,7 +9,11 @@ if (!isset($_SESSION['u_ID'])) {
 <div id="work-form-page" data-page-id="work_form" class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">每日工作日誌</h3>
-    <a href="pages/work_draft.php" class="btn btn-outline-secondary">查看日誌</a>
+<a href="#pages/work_draft.php" data-page="work_draft" class="btn btn-outline-secondary spa-link">
+  查看日誌
+</a>
+
+
   </div>
 
   <div class="card">
