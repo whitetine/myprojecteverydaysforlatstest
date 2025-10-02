@@ -50,3 +50,82 @@
     <iframe :src="selectedFileUrl" style="width:100%; height:350px; border:none;"></iframe>
   </div>
 </div>
+<!-- <script>
+(() => {
+  const { createApp, ref, computed, onMounted } = Vue;
+
+  // 這頁在 /pages/ 底下，用同一個判斷就好
+  const API_ROOT = location.pathname.includes('/pages/') ? '../api.php' : 'api.php';
+
+  createApp({
+    setup() {
+      // --- 狀態 ---
+      const files = ref([]);
+      const selectedFileID = ref('');
+      const applyUser = ref('');
+      const applyOther = ref('');
+      const imagePreview = ref(null);
+      const previewPercent = ref(60);
+
+      // --- 計算屬性：選到的檔案與預覽網址 ---
+      const selectedFile = computed(() =>
+        files.value.find(f => String(f.file_ID) === String(selectedFileID.value)) || null
+      );
+      const selectedFileUrl = computed(() => {
+        const f = selectedFile.value;
+        if (!f) return '';
+        const url = f.file_url || '';
+        if (/^https?:\/\//i.test(url)) return url; // 已是絕對網址
+        const prefix = location.pathname.includes('/pages/') ? '../' : '';
+        return prefix + url.replace(/^\.?\//, '');
+      });
+
+      // --- 讀清單（容錯支援 [ ... ] / {rows:[...]} / {data:[...]}）---
+      const loadFiles = async () => {
+        try {
+          const res = await fetch(`${API_ROOT}?do=listActiveFiles`, { cache: 'no-store' });
+          const raw = await res.text();
+          let data;
+          try { data = JSON.parse(raw); } catch { data = []; }
+          const list = Array.isArray(data) ? data
+                    : (data && Array.isArray(data.rows)) ? data.rows
+                    : (data && Array.isArray(data.data)) ? data.data
+                    : [];
+          files.value = list;
+        } catch (err) {
+          console.error('loadFiles error:', err);
+          files.value = [];
+        }
+      };
+
+      // --- 圖片預覽 ---
+      const previewImage = (e) => {
+        const f = e.target.files?.[0];
+        if (!f) { imagePreview.value = null; return; }
+        if (!/^image\/(png|jpeg)$/i.test(f.type)) {
+          imagePreview.value = null;
+          if (window.Swal) Swal.fire({ icon:'error', title:'請上傳 PNG 或 JPG' });
+          return;
+        }
+        const fr = new FileReader();
+        fr.onload = ev => imagePreview.value = ev.target.result;
+        fr.readAsDataURL(f);
+      };
+
+      // --- 送出（你原本怎麼寫就怎麼放；這裡先留空殼）---
+      const submitForm = async () => {
+        // TODO: 依你的後端 API 實作
+        // 這段與清單無關，不影響下拉顯示
+      };
+
+      onMounted(loadFiles);
+
+      return {
+        files, selectedFileID, applyUser, applyOther,
+        imagePreview, previewPercent, selectedFileUrl,
+        previewImage, submitForm
+      };
+    }
+  }).mount('#apply-uploader');
+})();
+</script> -->

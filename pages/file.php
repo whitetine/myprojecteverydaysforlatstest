@@ -12,7 +12,7 @@ require '../includes/pdo.php';
     <!-- 上傳表單 -->
     <div class="card mb-4">
       <div class="card-header"><strong>上傳新的 PDF 範例檔</strong></div>
-      <div class="card-body">ˇ
+      <div class="card-body">
         <label class="form-label">表單名稱：</label>
         <input type="text" class="form-control" v-model="form.f_name" placeholder="例如：專題指導申請表" />
 
@@ -101,26 +101,45 @@ require '../includes/pdo.php';
       const files = ref([]);
       const loading = ref(true);
       const error = ref('');
+const sortFiles = () => {
+  files.value.sort((a, b) =>
+    // 置頂優先
+    Number(b.is_top) - Number(a.is_top) ||
+    // 其餘依 file_ID 由大到小（新在前）
+    Number(b.file_ID) - Number(a.file_ID)
+  );
+};
 
       const fetchFiles = async () => {
-        loading.value = true;
-        error.value = '';
-        try {
-          const res = await fetch(`${API_ROOT}?do=get_files`, { cache: 'no-store' });
-          const raw = await res.text();
-          if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
-          let data;
-          try { data = JSON.parse(raw); }
-          catch { throw new Error('回應不是 JSON（可能 404 或 PHP 錯誤）'); }
-          if (!Array.isArray(data)) throw new Error('資料格式錯誤（非陣列）');
-          files.value = data;
-        } catch (e) {
-          console.error('fetchFiles error:', e);
-          error.value = '載入失敗（' + e.message + '）';
-        } finally {
-          loading.value = false;
-        }
-      };
+  loading.value = true;
+  error.value = '';
+  try {
+    const res = await fetch(`${API_ROOT}?do=get_files`, { cache: 'no-store' });
+    const raw = await res.text();
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error('回應不是 JSON（可能 404 或 PHP 錯誤）'); }
+
+    // ✅ 同時支援 [ ... ] 或 { rows:[ ... ] } 或 { data:[ ... ] }
+    const list = Array.isArray(data) ? data
+               : (data && Array.isArray(data.rows)) ? data.rows
+               : (data && Array.isArray(data.data)) ? data.data
+               : null;
+
+    if (!list) throw new Error('資料格式錯誤（非陣列）');
+
+    files.value = list;
+     sortFiles();   
+  } catch (e) {
+    console.error('fetchFiles error:', e);
+    error.value = '載入失敗（' + e.message + '）';
+  } finally {
+    loading.value = false;
+  }
+};
+
 
       const updateFile = async (file) => {
         const body = {
@@ -180,7 +199,7 @@ require '../includes/pdo.php';
       const toggleTop = async (file) => {
         const old = Number(file.is_top);
         file.is_top = old ? 0 : 1;
-        try { await updateFile(file); }
+        try { await updateFile(file); sortFiles();  }
         catch (e) {
           file.is_top = old;
           Swal.fire({ icon: 'error', title: '更新失敗', text: e.message || '請稍後再試' });
@@ -190,7 +209,7 @@ require '../includes/pdo.php';
       const toggleStatus = async (file) => {
         const old = Number(file.file_status);
         file.file_status = old ? 0 : 1;
-        try { await updateFile(file); }
+        try { await updateFile(file); sortFiles(); }
         catch (e) {
           file.file_status = old;
           Swal.fire({ icon: 'error', title: '更新失敗', text: e.message || '請稍後再試' });

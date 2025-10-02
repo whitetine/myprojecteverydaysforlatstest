@@ -43,7 +43,7 @@ $groups = $conn->query("SELECT * FROM `groupdata`")->fetchAll(PDO::FETCH_ASSOC);
                             <tr>
                                 <th style="width:72px"></th>
                                 <th>類組</th>
-                                <th style="width:120px">狀態</th>
+                                <th style="width:120px">目前狀態</th>
                                 <th style="width:140px">操作</th>
                             </tr>
                         </thead>
@@ -52,7 +52,7 @@ $groups = $conn->query("SELECT * FROM `groupdata`")->fetchAll(PDO::FETCH_ASSOC);
                                 <tr>
                                     <td><?= $i + 1 ?></td>
                                     <td><?= $g['group_name'] ?></td>
-                                    <td><?= $g['group_status'] ? '啟用' : '停用' ?></td>
+                                    <td style="font-weight:bold;color:chocolate;"><?= $g['group_status'] ? '啟用' : '停用' ?></td>
                                     <td>
                                         <form method="post" action="../api.php?do=toggle_group" class="d-inline">
                                             <input type="hidden" name="group_ID" value="<?= (int)$g['group_ID'] ?>">

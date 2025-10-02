@@ -5,26 +5,27 @@ $do = $_GET['do'] ?? '';
 
 switch ($do) {
     // 舊 API（apply.php 用）：啟用檔案列表
-    case 'get_all_TemplatesFile':
-        $rows = $conn->query("SELECT * FROM filedata WHERE file_status=1")->fetchAll(PDO::FETCH_ASSOC);
-        // 舊版是直接 json_encode 陣列，這裡仍回純陣列但包在 json_ok 內
-        json_ok(['rows' => $rows]);
-        break;
+case 'get_all_TemplatesFile':
+    $rows = $conn->query("SELECT * FROM filedata WHERE file_status=1")->fetchAll(PDO::FETCH_ASSOC);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($rows, JSON_UNESCAPED_UNICODE);   // ← 直接回陣列
+    exit;
 
-    // admin_file.php 清單
-    case 'get_files':
-        try {
-            $rows = $conn->query("
-                SELECT file_ID, file_name, file_url, file_status, is_top, file_update_d
-                FROM filedata
-                ORDER BY is_top DESC, file_update_d DESC, file_ID DESC
-            ")->fetchAll(PDO::FETCH_ASSOC);
-            json_ok(['rows' => $rows]);
-        } catch (Throwable $e) {
-            json_err('資料讀取失敗：'.$e->getMessage());
-        }
-        break;
-
+   case 'get_files':
+      try {
+        $rows = $conn->query("
+            SELECT file_ID, file_name, file_url, file_status, is_top, file_update_d
+            FROM filedata
+            ORDER BY is_top DESC, file_ID DESC     -- ← 重點
+        ")->fetchAll(PDO::FETCH_ASSOC);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($rows, JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode(['status'=>'error','message'=>'資料讀取失敗：'.$e->getMessage()]);
+        exit;
+    }
     // 狀態/置頂切換
     case 'update_template':
         $req = read_json_body();
@@ -81,17 +82,20 @@ switch ($do) {
         break;
 
     // 只取啟用的檔案（apply.php / file.php）
-    case 'listActiveFiles':
-        try {
-            $rows = $conn->query("
-                SELECT file_ID, file_name, file_url
-                FROM filedata
-                WHERE file_status = 1
-                ORDER BY is_top DESC, file_update_d DESC, file_ID DESC
-            ")->fetchAll(PDO::FETCH_ASSOC);
-            json_ok(['rows' => $rows]);
-        } catch (Throwable $e) {
-            json_err('資料讀取失敗：'.$e->getMessage());
-        }
-        break;
+case 'listActiveFiles':
+      try {
+        $rows = $conn->query("
+            SELECT file_ID, file_name, file_url
+            FROM filedata
+            WHERE file_status = 1
+            ORDER BY is_top DESC, file_ID DESC     -- ← 重點
+        ")->fetchAll(PDO::FETCH_ASSOC);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($rows, JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode(['status'=>'error','message'=>'資料讀取失敗：'.$e->getMessage()]);
+        exit;
+    }
 }

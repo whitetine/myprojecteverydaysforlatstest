@@ -1,18 +1,17 @@
 <?php
 // 統一 JSON 成功
-function json_ok(array $data = [], int $code = 200): void {
-    http_response_code($code); // 仍預設 200
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(array_merge(['status' => 'success'], $data), JSON_UNESCAPED_UNICODE);
-    exit;
+function json_ok(array $data = [], int $status = 200) {
+  http_response_code($status);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok'=>true] + $data, JSON_UNESCAPED_UNICODE);
+  exit;
 }
-
 // 統一 JSON 失敗（仍回 200，避免前端視為「連線錯誤」）
-function json_err(string $message, array $data = [], int $code = 200): void {
-    http_response_code($code);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(array_merge(['status' => 'error', 'message' => $message], $data), JSON_UNESCAPED_UNICODE);
-    exit;
+function json_err(string $msg, string $code = 'ERROR', int $status = 400) {
+  http_response_code($status);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok'=>false,'code'=>$code,'msg'=>$msg], JSON_UNESCAPED_UNICODE);
+  exit;
 }
 
 // 安全取得原始 JSON

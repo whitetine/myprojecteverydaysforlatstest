@@ -64,7 +64,7 @@ function headshot_url(?string $fn): string {
                   </span>
                 </td> -->
           <td>
-            <a href="../../main.php#pages/admin_edituser.php?u_ID=<?= $user['u_ID'] ?>" class="btn btn-success">編輯</a>
+            <a href="main.php#pages/admin_edituser.php?u_ID=<?= $user['u_ID'] ?>" class="btn btn-success">編輯</a>
 
           </td>
           <td>

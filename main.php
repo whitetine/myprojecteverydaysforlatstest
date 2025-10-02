@@ -8,6 +8,7 @@
       echo "<script>alert('請先登入!');location.href='index.php';</script>";
       exit;
     }
+    
     $user_name = $_SESSION['user_name'] ?? '未登入';
     $role_name = $_SESSION['role_name'] ?? '無';
     ?>

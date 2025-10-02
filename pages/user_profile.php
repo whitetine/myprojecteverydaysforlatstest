@@ -48,10 +48,16 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     </div>
 
     <div class="card-body">
-    <div class="mb-3 text-center">
-      <img id="avatarPreview" src="headshot/<?= $data['u_img'] ?? 'default.png' ?>" class="avatar-img border">
+<?php
+$img = !empty($data['u_img']) 
+    ? "headshot/" . $data['u_img'] 
+    : "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
+?>
+<div class="mb-3 text-center">
+    <img id="avatarPreview" src="<?= $img ?>" class="avatar-img border">
+</div>
 
-    </div>
+
 
     <form id="profileForm" method="post" action="../api.php?do=update_profile" enctype="multipart/form-data">
       <input type="hidden" name="u_ID" value="<?= $data['u_ID'] ?>">
