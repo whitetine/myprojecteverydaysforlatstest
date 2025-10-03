@@ -79,7 +79,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <label class="form-label">到期日期</label>
-                                                        <input type="date" class="form-control" name="end_date">
+                                                        <input type="datetime-local" class="form-control" name="end_dt">
                                                     </div>
                                                 </div>
 
