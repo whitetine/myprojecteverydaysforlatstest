@@ -6,7 +6,7 @@ $user_name = $_SESSION['user_name'] ?? '未登入';
         <div class="d-flex align-items-center">
             <button class="border-0 me-2" id="sidebarToggle"><i class="fas fa-bars"></i></button>
             
-            <a class="navbar-brand mb-0 text-black" href="../main.php">專題系統</a>
+            <a class="navbar-brand mb-0 text-black" href="main.php">專題系統</a>
         </div>
         <div class="d-flex align-items-center">
             <form class="d-flex align-items-center gap-2 me-3 mb-0" role="search">

@@ -12,23 +12,28 @@ switch (true) {
         break;
 
     // 檔案/模板管理（file.php 會用到）
-    case in_array($do, ['get_all_TemplatesFile','get_files','update_template','upload_template','listActiveFiles']):
+    case in_array($do, ['get_all_TemplatesFile', 'get_files', 'update_template', 'upload_template', 'listActiveFiles']):
         require __DIR__ . '/modules/file.php';
         break;
 
     // 使用者 / 角色 / 個資
-    case in_array($do, ['login_sub','role_choose','role_session','update_profile','update_password']):
+    case in_array($do, ['login_sub', 'role_choose', 'role_session', 'update_profile', 'update_password']):
         require __DIR__ . '/modules/user.php';
         break;
 
     // 進度
-    case in_array($do, ['select_team','select_group','new_progress_all']):
+    case in_array($do, ['select_team', 'select_group', 'new_progress_all']):
         require __DIR__ . '/modules/progress.php';
         break;
 
     // 互評
-    case in_array($do, ['submit_rating','get_active_period','set_active_period','has_rated']):
+    case in_array($do, ['submit_rating', 'get_active_period', 'set_active_period', 'has_rated']):
         require __DIR__ . '/modules/review.php';
+        break;
+
+
+    case in_array($do, ['notify_save']):
+        require __DIR__ . '/modules/notify.php';
         break;
 
     default:

@@ -44,9 +44,16 @@ $role_ID = $_SESSION['role_ID'] ?? null;
       <?= htmlspecialchars($_SESSION['u_gmail'] ?? ($_SESSION['u_ID'] ?? '')) ?>
     </li>
 
-    <li><a class="dropdown-item ajax-link" href="pages/user_profile.php">
-      <i class="fa-solid fa-user me-2"></i> 個人資料
-    </a></li>
+<li>
+  <a class="dropdown-item ajax-link" href="pages/user_profile.php">
+    <i class="fa-solid fa-address-card me-2"></i> 個人資料
+  </a>
+</li>
+<li>
+  <a class="dropdown-item ajax-link" href="pages/admin_notify.php">
+    <i class="fa-solid fa-bell me-2"></i> 公告管理
+  </a>
+</li>
 
     <!-- <li><a class="dropdown-item ajax-link" href="pages/admin_usermanage.php">
       <i class="fa-solid fa-users me-2"></i> 帳號管理
@@ -59,6 +66,7 @@ $role_ID = $_SESSION['role_ID'] ?? null;
       <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
         <i class="fa-solid fa-circle-question me-2"></i> 說明
       </a>
+      
       <ul class="dropdown-menu shadow border-0 rounded-3 py-2">
         <li><a class="dropdown-item" href="#" target="_blank">說明中心</a></li>
         <li><a class="dropdown-item ajax-link" href="pages/changelog.php">版本說明</a></li>
@@ -89,19 +97,25 @@ $role_ID = $_SESSION['role_ID'] ?? null;
     </a>
        <!-- <a class="nav-link ajax-link" href="pages/admin_file.php">
       <i class="fa-solid fa-file-lines"></i><span>文件管理</span></a> -->
+ <a class="nav-link ajax-link" href="#">
+      <i class="fa-solid fa-envelope"></i><span>最新消息</span></a>
        <a class="nav-link ajax-link" href="pages/file.php">
-      <i class="fa-solid fa-file-lines"></i><span>文件管理(更新)</span></a>
+      <i class="fa-solid fa-folder"></i><span>文件管理(更新)</span></a>
        <a class="nav-link ajax-link" href="pages/apply.php">
       <i class="fa-solid fa-file-lines"></i><span>申請文件上傳</span></a>
        <a class="nav-link ajax-link" href="pages/teacher_review_status.php">
-      <i class="fa-solid fa-file-lines"></i><span>互評(status)</span></a>
+      <i class="fa-solid fa-star-half-alt"></i><span>互評(status)</span></a>
           <a class="nav-link ajax-link" href="pages/work_draft.php">
       <i class="fa-solid fa-file-lines"></i><span>work_draft</span></a>
           <a class="nav-link ajax-link" href="pages/work_save.php">
       <i class="fa-solid fa-file-lines"></i><span>work_save</span></a>
 
           <a class="nav-link ajax-link" href="pages/work_form.php">
-      <i class="fa-solid fa-file-lines"></i><span>work_form</span></a>
+      <i class="fa-solid fa-pen-to-square"></i><span>work_form</span></a>
+
+
+       <!-- <a class="nav-link ajax-link" href="pages/admin_notify.php">
+      <i class="fa-solid fa-file-lines"></i><span>notify</span></a> -->
       <?php elseif ($role_ID == 6): ?>
  <a class="nav-link ajax-link" href="pages/apply.php">
       <i class="fa-solid fa-file-lines"></i><span>文件管理</span>
