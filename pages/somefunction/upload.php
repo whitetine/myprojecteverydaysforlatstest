@@ -59,7 +59,7 @@ try {
         INSERT INTO applydata
           ( file_ID, apply_status, apply_a_u_ID, apply_b_u_ID, apply_created_d, apply_other, apply_url)
         VALUES
-          (?, 1, 0, 0, NOW(), ?, ?)
+          (?, 1, ?, 0, NOW(), ?, ?)
     ";
     $stmt = $conn->prepare($sql); // ★ 用 $conn，不是 $pdo
     $stmt->execute([$file_ID, $apply_user, $apply_other, $dbPath]);
