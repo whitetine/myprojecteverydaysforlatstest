@@ -1,4 +1,4 @@
-// (function () {
+
 //   window.API_UPLOAD_URL = 'pages/somefunction/upload.php';
 //   window.API_LIST_URL   = 'api.php?do=listActiveFiles';
 
@@ -192,21 +192,40 @@
           const f = this.$refs.applyImage?.files?.[0];
           if (f) fd.append('apply_image', f);
 
+          // try {
+          //   const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
+          //   const data = await res.json();
+          //   if (data.status === 'success') {
+          //     Swal.fire('成功', '申請已送出！', 'success');
+          //     this.applyUser = ''; this.applyOther = '';
+          //     this.selectedFileID = ''; this.selectedFileName = '';
+          //     if (this.$refs.applyImage) this.$refs.applyImage.value = '';
+          //     this.imagePreview = null;
+          //   } else {
+          //     Swal.fire('失敗', data.message || '發生錯誤', 'error');
+          //   }
+          // } catch {
+          //   Swal.fire('錯誤', '無法送出申請', 'error');
+          // }
+
           try {
-            const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
-            const data = await res.json();
-            if (data.status === 'success') {
-              Swal.fire('成功', '申請已送出！', 'success');
-              this.applyUser = ''; this.applyOther = '';
-              this.selectedFileID = ''; this.selectedFileName = '';
-              if (this.$refs.applyImage) this.$refs.applyImage.value = '';
-              this.imagePreview = null;
-            } else {
-              Swal.fire('失敗', data.message || '發生錯誤', 'error');
-            }
-          } catch {
-            Swal.fire('錯誤', '無法送出申請', 'error');
-          }
+  const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
+  const text = await res.text();                 // 先拿原始字串
+  let data; try { data = JSON.parse(text); } catch {}
+
+  if (!res.ok) {
+    throw new Error(data?.message || `HTTP ${res.status} ${res.statusText}`);
+  }
+  if (data?.status !== 'success') {
+    throw new Error(data?.message || '後端回應失敗');
+  }
+
+  Swal.fire('成功', '申請已送出！', 'success');
+  // reset...
+} catch (err) {
+  Swal.fire('錯誤', String(err?.message || err), 'error'); // 顯示真正原因
+}
+
         }
       },
       mounted() {

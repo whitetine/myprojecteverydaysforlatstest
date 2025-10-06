@@ -9941,19 +9941,12 @@ Component that was made reactive: `,
       for (let i = 0; i < this.attributes.length; i++) {
         this._setAttr(this.attributes[i].name);
       }
-      if (typeof MutationObserver !== 'undefined' && (this instanceof Node)) {
-        this._ob = new MutationObserver((mutations) => {
-          for (const m of mutations) {
-            if (m.type === 'attributes' && m.attributeName) {
-              this._setAttr(m.attributeName);
-            }
-          }
-        });
-        this._ob.observe(this, { attributes: true });
-      } else {
-        this._ob = null;
-        // Skipped observing because not in a browser environment or target is not a Node
-      }
+      this._ob = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          this._setAttr(m.attributeName);
+        }
+      });
+      this._ob.observe(this, { attributes: true });
       const resolve = (def, isAsync = false) => {
         const { props, styles } = def;
         let numberProps;

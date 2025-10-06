@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
 session_start();
-require_once "../../pdo.php"; // 這裡會給你 $conn (PDO)
+require_once "../../includes/pdo.php";// 這裡會給你 $conn (PDO)
 
 try {
     //讀取表單資料
@@ -37,7 +37,7 @@ try {
 
 
     // 建立上傳資料夾
-    $uploadDir = dirname(__DIR__, 2) . '/uploads/images/';
+    $uploadDir = dirname( __DIR__, 2) . '/uploads/images/';
     if (!is_dir($uploadDir) && !mkdir($uploadDir, 0777, true) && !is_dir($uploadDir)) {
         echo json_encode(["status" => "error", "message" => "無法建立上傳資料夾"]);
         exit;
@@ -56,10 +56,10 @@ try {
 
 
  $sql = "
-        INSERT INTO apply
-          (file_ID, apply_user, apply_status, apply_a_u_ID, apply_b_u_ID, apply_created_d, apply_other, apply_url)
+        INSERT INTO applydata
+          ( file_ID, apply_status, apply_a_u_ID, apply_b_u_ID, apply_created_d, apply_other, apply_url)
         VALUES
-          (?, ?, 1, 0, 0, NOW(), ?, ?)
+          (?, 1, 0, 0, NOW(), ?, ?)
     ";
     $stmt = $conn->prepare($sql); // ★ 用 $conn，不是 $pdo
     $stmt->execute([$file_ID, $apply_user, $apply_other, $dbPath]);

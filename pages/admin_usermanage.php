@@ -3,6 +3,7 @@
 <?php
 require '../includes/pdo.php';
 
+
 $sql = "SELECT u.*, r.*,s.*,c.*
         FROM userdata u
         LEFT JOIN userrolesdata ur ON u.u_ID = ur.u_ID 

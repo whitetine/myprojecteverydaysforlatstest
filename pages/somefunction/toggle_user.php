@@ -1,5 +1,5 @@
 <?php
-include "../../pdo.php";
+require_once "../../includes/pdo.php";
 
 $acc = $_GET['acc'] ?? '';
 $status = $_GET['status'] ?? null;

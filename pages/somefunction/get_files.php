@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-require_once "../../../pdo.php";
+require_once "../../includes/pdo.php";
 
 try {
   $sql = "SELECT file_ID, file_name, file_url, file_status, is_top, file_update_d

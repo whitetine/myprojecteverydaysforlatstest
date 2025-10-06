@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
 session_start();
-require_once "../../pdo.php"; // 這裡會給你 $conn (PDO)
+require_once "../../includes/pdo.php";// 這裡會給你 $conn (PDO)
 
 try {
   // 1) 取表單欄位（文字 + 檔案）
