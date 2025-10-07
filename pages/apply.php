@@ -36,6 +36,7 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
                                    name="apply_user" 
                                    value="<?= htmlspecialchars($_SESSION['u_ID'] ?? '') ?>"
                                    readonly>
+
                             <input type="hidden" name="apply_user" value="<?= $_SESSION['u_ID'] ?>">
                         </div>
                     </div>
@@ -111,17 +112,5 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
     </div>
 </div>
 
-<!-- 額外 CSS（可選，內嵌或外部檔案）以進一步美化 -->
-<style>
-.preview-img {
-    border: 1px solid #dee2e6;
-    background-color: #f8f9fa;
-}
-.card {
-    border-radius: 0.5rem;
-}
-.form-label {
-    font-weight: 600;
-    color: #495057;
-}
-</style>
+
+<script src="js/apply.js"></script>

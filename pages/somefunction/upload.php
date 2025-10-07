@@ -9,7 +9,7 @@ require_once "../../includes/pdo.php";// 這裡會給你 $conn (PDO)
 try {
     //讀取表單資料
     $file_ID     = $_POST['file_ID'] ?? '';
-    $apply_user  = $_POST['apply_user'] ?? ($_SESSION['u_ID'] ?? 0); 
+    $apply_user  = $_POST['apply_user'] ?? ($_SESSION['u_ID'] ?? 0);
     $apply_other = $_POST['apply_other'] ?? '';
     $file        = $_FILES['apply_image'] ?? null;
 
@@ -64,7 +64,6 @@ try {
     ";
     $stmt = $conn->prepare($sql); // ★ 用 $conn，不是 $pdo
     $stmt->execute([$file_ID, $apply_user, $apply_other, $dbPath]);
-
     echo json_encode([
         "status"   => "success",
         "message"  => "申請已成功送出！",
