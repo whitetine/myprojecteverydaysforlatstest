@@ -31,10 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 try {
-  $sql  = "SELECT a.*, f.file_ID AS f_id, f.file_name
-           FROM applydata a
-           LEFT JOIN filedata f ON a.file_ID = f.file_ID
-           ORDER BY a.apply_status ASC, a.apply_created_d DESC";
+  $sql  = "select  a.*, f.file_ID , f.file_name, u.u_ID as apply_user
+              from applydata a 
+              left join filedata f on a.file_ID = f.file_ID
+              left join userdata u on a.apply_a_u_ID = u.u_ID
+              order by a.apply_status asc, a.apply_created_d desc
+              ";
   $rows = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
   $fileTypes = $conn->query("SELECT file_ID, file_name FROM filedata")
@@ -120,14 +122,23 @@ try {
           <tbody>
             <?php foreach ($rows as $r): ?>
               <tr
-                data-fileid="<?= htmlspecialchars((string)($r['f_id'] ?? ''), ENT_QUOTES) ?>"
+                data-fileid="<?= htmlspecialchars((string)($r['file_ID'] ?? ''), ENT_QUOTES) ?>".
+
                 data-filename="<?= htmlspecialchars($r['apply_other'] ?? '', ENT_QUOTES) ?>"
+
                 data-applicant="<?= htmlspecialchars($r['apply_user'] ?? '', ENT_QUOTES) ?>">
+
                 <td><?= htmlspecialchars($r['file_name'] ?? '') ?></td>
                 <td class="filename-cell"><?= htmlspecialchars($r['apply_other'] ?? '') ?></td>
-                <td class="applicant-cell"><?= htmlspecialchars($r['apply_user'] ?? '') ?></td>
+
+                <td class="applicant-cell">
+                <?=htmlspecialchars($r['apply_user']??($r['apply_a_u_ID']??''))?>
+                </td>
+
                 <td><?= htmlspecialchars($r['apply_created_d'] ?? '') ?></td>
+
                 <td>
+                  
                   <?php if (!empty($r['apply_url']) && preg_match('/\.(jpg|jpeg|png)$/i', $r['apply_url'])): ?>
                     <img src="<?= htmlspecialchars($r['apply_url']) ?>"
                       class="preview fixed-thumb"
@@ -139,15 +150,18 @@ try {
                     無
                   <?php endif; ?>
                 </td>
+
                 <td class="status-cell">
                   <?= ($r['apply_status'] == 1 ? '待審核' : ($r['apply_status'] == 2 ? '退件' : '已通過')) ?>
                 </td>
+
                 <td class="op-cell">
                   <?php if ((int)$r['apply_status'] === 1): ?>
                     <button class="btn btn-success" onclick="updateStatus(<?= (int)$r['apply_ID'] ?>,'approve',this)">通過</button>
                     <button class="btn btn-danger" onclick="updateStatus(<?= (int)$r['apply_ID'] ?>,'reject',this)">退件</button>
                     <?php else: ?>-<?php endif; ?>
                 </td>
+                
               </tr>
             <?php endforeach; ?>
           </tbody>

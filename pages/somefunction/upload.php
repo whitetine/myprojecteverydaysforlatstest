@@ -9,11 +9,12 @@ require_once "../../includes/pdo.php";// 這裡會給你 $conn (PDO)
 try {
     //讀取表單資料
     $file_ID     = $_POST['file_ID'] ?? '';
-    $apply_user  = $_POST['apply_user'] ?? '';
+    $apply_user  = $_POST['apply_user'] ?? ($_SESSION['u_ID'] ?? 0); 
     $apply_other = $_POST['apply_other'] ?? '';
     $file        = $_FILES['apply_image'] ?? null;
 
-    if (empty($file_ID) || empty($apply_user) || !$file || $file['error'] !== UPLOAD_ERR_OK) {
+    if (empty($file_ID)  || !$file || $file['error'] !== UPLOAD_ERR_OK) {
+    // if (empty($file_ID) || empty($apply_user) || !$file || $file['error'] !== UPLOAD_ERR_OK) {
         echo json_encode(["status" => "error", "message" => "請完整填寫欄位並上傳圖檔"]);
         exit;
     }
@@ -57,9 +58,9 @@ try {
 
  $sql = "
         INSERT INTO applydata
-          ( file_ID, apply_status, apply_a_u_ID, apply_b_u_ID, apply_created_d, apply_other, apply_url)
+          ( file_ID,  apply_a_u_ID, apply_other, apply_url, apply_status, apply_created_d)
         VALUES
-          (?, 1, ?, 0, NOW(), ?, ?)
+          (?, ?, ?, ?, 1, NOW())
     ";
     $stmt = $conn->prepare($sql); // ★ 用 $conn，不是 $pdo
     $stmt->execute([$file_ID, $apply_user, $apply_other, $dbPath]);
