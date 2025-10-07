@@ -6,8 +6,16 @@ require '../includes/pdo.php';
 <html lang="zh-Hant">
 
 <div id="adminFileApp" class="container my-4">
-  <h1 class="mb-4">範例檔案上傳（老師專區）</h1>
-  
+<h1 class="mb-4 d-flex justify-content-between align-items-center">
+  範例檔案上傳
+  <a href="#pages/apply_preview.php" 
+     data-page="apply_preview" 
+     class="btn btn-outline-secondary spa-link">
+    查看審核列表
+  </a>
+</h1>
+
+
 
     <!-- 上傳表單 -->
     <div class="card mb-4">
