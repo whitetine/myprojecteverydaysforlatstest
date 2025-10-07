@@ -9,16 +9,21 @@
     <div class="card-header"><strong>上傳區</strong></div>
     <div class="card-body">
       <form @submit.prevent="submitForm" enctype="multipart/form-data">
-        <label class="form-label" for="file_ID">選擇表單類型：</label>
-        <select v-model="selectedFileID" name="file_ID" id="file_ID" class="form-select" required>
+
+        <div class="filters d-flex align-items-center gap-2 flex-nowrap">
+
+        <label class="form-label  mt-3 " for="file_ID">選擇表單類型：</label>
+        <select v-model="selectedFileID" style="width: 30%;" 
+        name="file_ID" id="file_ID" class="form-select flex-grow-1 min-w-0" required>
           <option disabled value="">請選擇表單</option>
           <option v-for="file in files" :key="file.file_ID" :value="file.file_ID">
             {{ file.file_name }}
           </option>
         </select>
 
-        <label class="form-label mt-3" for="apply_user">申請人姓名：</label>
-        <input type="text" class="form-control" v-model="applyUser" id="apply_user" name="apply_user" required>
+        <label class="form-label mt-3 " for="apply_user">申請人姓名：</label>
+        <input type="text" style="width:30%;" class="form-control flex-shrink-0" v-model="applyUser" id="apply_user" name="apply_user" required>
+      </div>
 
         <label for="apply_other" class="form-label mt-3">檔案名稱/其他備註：</label>
         <textarea v-model="applyOther" class="form-control" id="apply_other" name="apply_other" rows="3"></textarea>
