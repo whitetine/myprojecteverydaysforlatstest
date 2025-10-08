@@ -136,7 +136,7 @@
   // 全域 API 設定（未合併 storage 前先用 upload.php；日後改下一行即可）
   // ========================
   window.API_UPLOAD_URL = 'pages/somefunction/upload.php';            // ← 之後合併時改成 'api.php?do=upload'
-  window.API_LIST_URL   = 'api.php?do=listActiveFiles';
+  window.API_LIST_URL = 'api.php?do=listActiveFiles';
 
   // ========================
   // Router 共用
@@ -147,7 +147,7 @@
 
   // 檔名 -> render 函式名：apply.php -> renderApplyPage
   function filenameToRenderFn(filePath) {
-    const base   = filePath.replace(/^.*\//, '').replace(/\.php.*/, '');
+    const base = filePath.replace(/^.*\//, '').replace(/\.php.*/, '');
     const pascal = base.replace(/(^|[_-])(\w)/g, (_, __, c) => c.toUpperCase());
     return 'render' + pascal + 'Page';
   }
@@ -162,79 +162,62 @@
     const { createApp } = Vue;
 
     const app = createApp({
-      data() {
-        return {
-          selectedFileID: '',
-          selectedFileName: '',
-          files: [],
-          imagePreview: null,
-          applyUser: '',
-          applyOther: '',
-          previewPercent: 60,
-        };
-      },
-      computed: {
-        selectedFileUrl() {
-          const f = this.files.find(x => String(x.file_ID) === String(this.selectedFileID));
-          return f ? f.file_url : '';
-        }
-      },
-      methods: {
-        previewImage(e) {
-          const file = e.target.files[0];
-          this.imagePreview = (file && file.type.startsWith('image/')) ? URL.createObjectURL(file) : null;
-        },
-        async submitForm() {
-          const fd = new FormData();
-          fd.append('file_ID', this.selectedFileID);
-          fd.append('apply_user', this.applyUser);
-          fd.append('apply_other', this.applyOther);
-          const f = this.$refs.applyImage?.files?.[0];
-          if (f) fd.append('apply_image', f);
-
-          // try {
-          //   const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
-          //   const data = await res.json();
-          //   if (data.status === 'success') {
-          //     Swal.fire('成功', '申請已送出！', 'success');
-          //     this.applyUser = ''; this.applyOther = '';
-          //     this.selectedFileID = ''; this.selectedFileName = '';
-          //     if (this.$refs.applyImage) this.$refs.applyImage.value = '';
-          //     this.imagePreview = null;
-          //   } else {
-          //     Swal.fire('失敗', data.message || '發生錯誤', 'error');
-          //   }
-          // } catch {
-          //   Swal.fire('錯誤', '無法送出申請', 'error');
-          // }
-
-          try {
-  const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
-  const text = await res.text();                 // 先拿原始字串
-  let data; try { data = JSON.parse(text); } catch {}
-
-  if (!res.ok) {
-    throw new Error(data?.message || `HTTP ${res.status} ${res.statusText}`);
+data() {
+  return {
+    files: [],
+    selectedFileID: '',
+    applyOther: '',
+    imagePreview: null,
+    previewPercent: 60,
+    applyUserId: ''   // 後端要的 u_ID（varchar）
+  };
+},
+computed: {
+  selectedFileUrl() {
+    const f = this.files.find(x => String(x.file_ID) === String(this.selectedFileID));
+    return f ? f.file_url : '';
   }
-  if (data?.status !== 'success') {
-    throw new Error(data?.message || '後端回應失敗');
-  }
+},
+methods: {
+  previewImage(e) {
+    const f = e.target.files?.[0];
+    this.imagePreview = (f && f.type.startsWith('image/'))
+      ? URL.createObjectURL(f)
+      : null;
+  },
+  async submitForm() {
+    const formEl = document.getElementById('applyForm');   // ← 表單一定要有這個 id
+    const fd = new FormData(formEl);                       // ✅ 直接把所有欄位（含 hidden）打包
 
-  Swal.fire('成功', '申請已送出！', 'success');
-  // reset...
-} catch (err) {
-  Swal.fire('錯誤', String(err?.message || err), 'error'); // 顯示真正原因
+    try {
+      const res  = await fetch(window.API_UPLOAD_URL, { method: 'POST', body: fd });
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (data.status !== 'success') throw new Error(data.message || '上傳失敗');
+
+      Swal.fire('成功', '申請已送出！', 'success');
+
+      // reset UI
+      formEl.reset();
+      this.selectedFileID = '';
+      this.applyOther = '';
+      this.imagePreview = null;
+      this.previewPercent = 60;
+    } catch (err) {
+      Swal.fire('錯誤', String(err?.message || err), 'error');
+    }
+  }
+},
+mounted() {
+  // 從頁面注入的全域變數拿 u_ID（字串）
+  this.applyUserId = window.CURRENT_USER?.u_ID || '';
+
+  // 載入表單清單（若你的下拉是用 v-for）
+  fetch(window.API_LIST_URL)
+    .then(r => r.json())
+    .then(arr => { if (Array.isArray(arr)) this.files = arr; });
 }
 
-        }
-      },
-      mounted() {
-
-        fetch(window.API_LIST_URL)
-          .then(r => r.json())
-          .then(arr => { if (Array.isArray(arr)) this.files = arr; });
-          
-      }
     });
 
     app.mount(mountEl);
@@ -249,15 +232,15 @@
 
     // 卸載上一個 Vue App（若有）
     if (currentApp && typeof currentApp.unmount === 'function') {
-      try { currentApp.unmount(); } catch(e) {}
+      try { currentApp.unmount(); } catch (e) { }
       currentApp = null;
     }
 
     $(CONTENT_SEL).html('<div class="p-5 text-center text-secondary">載入中…</div>');
 
-    $(CONTENT_SEL).load(path, function(response, status, xhr) {
+    $(CONTENT_SEL).load(path, function (response, status, xhr) {
       if (status === 'error') {
-        $(CONTENT_SEL).html('<div class="alert alert-danger m-3">載入失敗：' + (xhr?.status||'') + ' ' + (xhr?.statusText||'') + '</div>');
+        $(CONTENT_SEL).html('<div class="alert alert-danger m-3">載入失敗：' + (xhr?.status || '') + ' ' + (xhr?.statusText || '') + '</div>');
         return;
       }
 
@@ -284,8 +267,8 @@
   // ========================
   function initPageScript() {
     // 啟/停用帳號（委派）
-    $(document).off("click", ".toggle-btn").on("click", ".toggle-btn", function() {
-      const acc    = $(this).data("acc");
+    $(document).off("click", ".toggle-btn").on("click", ".toggle-btn", function () {
+      const acc = $(this).data("acc");
       const status = $(this).data("status");
       const action = $(this).data("action");
 
@@ -311,7 +294,7 @@
   }
 
   // 攔截 .ajax-link（含 dropdown 裡的）
-  $(document).on("click", "a.ajax-link", function(e) {
+  $(document).on("click", "a.ajax-link", function (e) {
     e.preventDefault();
     const url = $(this).attr("href");
     window.location.hash = url; // 觸發 hashchange → loadSubpage
@@ -344,7 +327,7 @@
       el.addEventListener('mouseenter', () => {
         const toggle = el.querySelector('[data-bs-toggle="dropdown"]');
         if (!toggle || !window.bootstrap || !bootstrap.Dropdown) return;
-        const dd = bootstrap.Dropdown.getOrCreateInstance(toggle, { autoClose: false, popperConfig: { strategy: 'fixed' }});
+        const dd = bootstrap.Dropdown.getOrCreateInstance(toggle, { autoClose: false, popperConfig: { strategy: 'fixed' } });
         dd.show();
       });
       el.addEventListener('mouseleave', () => {

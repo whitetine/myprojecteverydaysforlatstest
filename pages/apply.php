@@ -14,7 +14,7 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
                 <strong>上傳區</strong>
             </div>
             <div class="card-body">
-                <form @submit.prevent="submitForm" enctype="multipart/form-data">
+                <form @submit.prevent="submitForm" enctype="multipart/form-data" id="applyForm">
                     <!-- 選擇表單類型與申請人姓名：一行布局 -->
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
@@ -33,12 +33,12 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
                             <input type="text" 
                                    class="form-control" 
                                    id="apply_user" 
-                                   v-model="applyUser"
+                                   value="<?= htmlspecialchars($_SESSION['u_ID'] ?? '') ?>"
                                    readonly>
-                                   <!-- value="<?= htmlspecialchars($_SESSION['u_ID'] ?? '') ?>" -->
 
-                            <input type="hidden" name="apply_user" value="<?= $_SESSION['u_ID'] ?>">
-                        </div>
+                                   
+                            <input type="hidden"v-model="applyUser" name="apply_user">
+
                     </div>
 
                     <!-- 檔案名稱/其他備註 -->
@@ -112,3 +112,6 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
     </div>
 </div>
 
+<script>
+  window.CURRENT_USER = <?= json_encode(['u_ID'=>(string)($_SESSION['u_ID'] ?? '')], JSON_UNESCAPED_UNICODE) ?>;
+</script>
