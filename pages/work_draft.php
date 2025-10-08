@@ -70,4 +70,4 @@ if (!isset($_SESSION['u_ID'])) {
 </div>
 
 <link rel="stylesheet" href="css/pages/work-draft.css">
-<script src="js/pages/work-draft.js"></script>
+<script src="../js/work-draft.js"></script>

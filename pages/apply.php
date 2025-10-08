@@ -33,9 +33,9 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
                             <input type="text" 
                                    class="form-control" 
                                    id="apply_user" 
-                                   name="apply_user" 
-                                   value="<?= htmlspecialchars($_SESSION['u_ID'] ?? '') ?>"
+                                   v-model="applyUser"
                                    readonly>
+                                   <!-- value="<?= htmlspecialchars($_SESSION['u_ID'] ?? '') ?>" -->
 
                             <input type="hidden" name="apply_user" value="<?= $_SESSION['u_ID'] ?>">
                         </div>
@@ -112,5 +112,3 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
     </div>
 </div>
 
-
-<script src="js/apply.js"></script>

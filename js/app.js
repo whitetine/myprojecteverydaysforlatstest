@@ -229,9 +229,11 @@
         }
       },
       mounted() {
+
         fetch(window.API_LIST_URL)
           .then(r => r.json())
           .then(arr => { if (Array.isArray(arr)) this.files = arr; });
+          
       }
     });
 

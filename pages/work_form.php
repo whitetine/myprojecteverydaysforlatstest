@@ -54,4 +54,4 @@
 </div>
 <!-- 掛上本頁 CSS / JS（若你的 main.js 會動態注入，可改用動態載入） -->
 <link rel="stylesheet" href="css/work-form.css">
-<script src="js/pages/work-form.js"></script>
+<script src="../js/work-form.js"></script>
