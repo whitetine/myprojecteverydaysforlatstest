@@ -9,12 +9,11 @@ require_once "../../includes/pdo.php";// 這裡會給你 $conn (PDO)
 try {
     //讀取表單資料
     $file_ID     = $_POST['file_ID'] ?? '';
-    $apply_user  = $_POST['apply_user'] ?? ($_SESSION['u_ID'] ?? 0);
+    $apply_user  = $_POST['apply_user'] ?? ($_SESSION['u_ID'] ?? '');
     $apply_other = $_POST['apply_other'] ?? '';
     $file        = $_FILES['apply_image'] ?? null;
 
-    if (empty($file_ID)  || !$file || $file['error'] !== UPLOAD_ERR_OK) {
-    // if (empty($file_ID) || empty($apply_user) || !$file || $file['error'] !== UPLOAD_ERR_OK) {
+    if (empty($file_ID) || empty($apply_user) || !$file || $file['error'] !== UPLOAD_ERR_OK) {
         echo json_encode(["status" => "error", "message" => "請完整填寫欄位並上傳圖檔"]);
         exit;
     }
