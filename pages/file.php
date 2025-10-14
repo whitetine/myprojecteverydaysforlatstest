@@ -189,8 +189,17 @@ const sortFiles = () => {
 
         try {
           const res = await fetch(`${API_ROOT}?do=upload_template`, { method: 'POST', body: fd });
-          const data = await res.json();
-          if (data.status === 'success') {
+          //1014update
+
+          console.log('Http status:',res.status,'ok:',res.ok);
+          const raw = await res.text();
+          console.log('Raw response:',raw);
+          // const data = await res.json();
+          if(!res.ok) throw new Error(`http ${res.status}: ${res.statusText}`);
+          const data = JSON.parse(raw);
+          
+          // if (data.status === 'success') {
+          if (data.ok) {
             Swal.fire({ icon: 'success', title: '上傳成功', text: '文件ID: ' + data.file_ID });
             form.value.f_name = '';
             form.value.file = null;
@@ -201,8 +210,10 @@ const sortFiles = () => {
           }
         } catch (err) {
           Swal.fire({ icon: 'error', title: '上傳失敗', text: err.message || '請稍後再試' });
+       console.error('Failed to refresh files:', err);
         }
       };
+      //----------
 
       const toggleTop = async (file) => {
         const old = Number(file.is_top);

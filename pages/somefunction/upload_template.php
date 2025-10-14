@@ -1,5 +1,10 @@
 <?php
-ini_set('display_errors', 1);
+//1014update15:43
+ob_clean();
+// ini_set('display_errors', 1);
+// 關閉錯誤訊息顯示
+ini_set('display_errors', 0);
+//-------------
 error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
@@ -22,6 +27,13 @@ try {
     echo json_encode(['status' => 'error', 'message' => '只允許上傳 PDF 檔案']);
     exit;
   }
+
+  //1014update16:08限制檔案大小
+  if($file['size'] > 10485760){
+    echo json_encode(['status' => 'error','messsage' =>'檔案過大,最大允許10MB']);
+    exit;
+  }
+
 
   // 3) 產生安全檔名
   $safeBase = preg_replace("/[^a-zA-Z0-9-_\.]/", "", pathinfo($file['name'], PATHINFO_FILENAME));
