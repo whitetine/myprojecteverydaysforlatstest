@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-10-14 21:14:54
+-- 產生時間： 2025-10-14 21:18:52
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -131,16 +131,6 @@ CREATE TABLE `filedata` (
   `file_status` int(11) NOT NULL COMMENT '文件狀態',
   `file_end_d` datetime DEFAULT NULL COMMENT '截止日期'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='範例文件資料';
-
---
--- 傾印資料表的資料 `filedata`
---
-
-INSERT INTO `filedata` (`file_ID`, `file_name`, `file_url`, `file_other`, `is_top`, `file_update_d`, `file_status`, `file_end_d`) VALUES
-(1, '指導教師同意暨參賽切結書', 'templates/tpl_20251014_074840_5df5a4.pdf', NULL, 0, '2025-10-14 13:48:40', 1, NULL),
-(2, '指導教師同意暨參賽切結書', 'templates/tpl_20251014_074854_5c8d92.pdf', NULL, 0, '2025-10-14 13:48:54', 1, NULL),
-(3, '113年度康寧學校財團法人康寧大學國際體驗學習計畫(公告版)', 'templates/tpl_20251014_084340_c4aad0.pdf', NULL, 0, '2025-10-14 14:43:40', 1, NULL),
-(4, '艾訊實習成果報告PPT', 'templates/tpl_20251014_084835_a4de60.pdf', NULL, 0, '2025-10-14 14:48:35', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -744,7 +734,7 @@ ALTER TABLE `classdata`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `filedata`
 --
 ALTER TABLE `filedata`
-  MODIFY `file_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '文件ID', AUTO_INCREMENT=5;
+  MODIFY `file_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '文件ID';
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `groupdata`
