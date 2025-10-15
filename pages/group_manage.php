@@ -49,7 +49,7 @@ $groups = $conn->query("SELECT * FROM `groupdata`")->fetchAll(PDO::FETCH_ASSOC);
                                     <td><?= $g['group_name'] ?></td>
                                     <td style="font-weight:bold;color:chocolate;"><?= $g['group_status'] ? '啟用' : '停用' ?></td>
                                     <td>
-                                        <form method="post" action="../api.php?do=toggle_group" class="d-inline">
+                                        <form method="post" action="api.php?do=toggle_group" class="d-inline">
                                             <input type="hidden" name="group_ID" value="<?= (int)$g['group_ID'] ?>">
                                             <button type="submit" class="btn btn-<?= $g['group_status'] ? 'danger' : 'primary' ?>">
                                                 <?= $g['group_status'] ? '停用' : '啟用' ?>
@@ -88,7 +88,7 @@ $groups = $conn->query("SELECT * FROM `groupdata`")->fetchAll(PDO::FETCH_ASSOC);
                 title: '確定要新增這個類組？',
                 text: `名稱：${name}`,
                 icon: 'question',
-                showCancelButton: true,
+                showCancelButton: true, 
                 confirmButtonText: '確定新增',
                 cancelButtonText: '取消'
             }).then(result => {

@@ -68,10 +68,13 @@ const applyModule={
           if(data && (data.rows ||data.data)){
             this.files = data.rows ||data.data;
           }else{
+            this.files = [];
             console.log('no files data received:',data)
           }
         
       }catch(e){
+            this.files = [];
+
         console.error('failed to fetch files:',e);
       }
     }

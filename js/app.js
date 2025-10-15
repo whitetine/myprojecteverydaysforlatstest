@@ -37,17 +37,22 @@
           selectedFileID: '',
           imagePreview: null,
           previewPercent: 50,
-          files: [],
-          selectedFileUrl: ''
+          files: []
+          // selectedFileUrl: ''
           //---------
         };
       },
       computed: {
-        selectedFileUrl() {
+        // selectedFileUrl() {
+        //   const f = this.files.find(x => String(x.file_ID) === String(this.selectedFileID));
+        //   return f ? f.file_url : '';
+
+        selectedFileUrl(){
           const f = this.files.find(x => String(x.file_ID) === String(this.selectedFileID));
           return f ? f.file_url : '';
         }
-      },
+
+        },
       methods: {
         previewImage(e) {
           const f = e.target.files?.[0];
@@ -89,13 +94,14 @@
 
         async fetchFiles(){
          try{
-          const res = await fetch(window.API_LIST_URL);
+          const res = await fetch(window.API_LIST_URL ,{cache: 'no-store'});
           const data = await res.json();
-          if(data && (data.rows || data.data)){
-            this.files = data.rows || data.data;
-          }else{
-            console.warn('no files data received:',data);
-          }
+          this.files = Array.isArray(data)? data : (data.rows || data.data || []);
+        //   if(data && (data.rows || data.data)){
+        //     this.files = data.rows || data.data;
+        //   }else{
+        //     console.warn('no files data received:',data);
+        //   }
          } catch(e){
           console.error('failed to fetch files:',e);
          }
@@ -103,15 +109,15 @@
 
       },
       //1015update 16:50
-      watch:{
-        selectedFileID(newVal){
-          if(newVal){
-            this.selectedFileUrl = `templates/file_${newVal}.pdf`;
-          }else{
-            this.selectedFileUrl = '';
-          }
-        }
-      },
+      // watch:{
+      //   selectedFileID(newVal){
+      //     if(newVal){
+      //       this.selectedFileUrl = `templates/file_${newVal}.pdf`;
+      //     }else{
+      //       this.selectedFileUrl = '';
+      //     }
+      //   }
+      // },
       //--------
       created(){
         console.log('created current user:',window.CURRENT_USER,'apply user:',this.applyUser);
@@ -185,7 +191,7 @@
           showCancelButton: true,
           confirmButtonText: `是，${action}`,
           cancelButtonText: "取消",
-          reverseButtons: true
+          reverseButtons: false
         }).then((r) => {
           if (r.isConfirmed) {
             location.href = `pages/somefunction/toggle_user.php?acc=${acc}&status=${status}`;
