@@ -21,6 +21,7 @@ function headshot_url(?string $fn): string {
   if (!$fn) return "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
   return "../headshot/" . rawurlencode($fn);
 }
+
 ?>
 
 

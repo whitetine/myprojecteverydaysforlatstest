@@ -17,10 +17,12 @@ $sql = "SELECT u.*, r.role_ID, r.role_name, s.status_ID, s.status_name, c.class_
 $stmt = $conn->prepare($sql);
 $stmt->execute([$u_ID]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
 if (!$user) {
   echo '<div class="alert alert-warning">找不到該使用者</div>';
   exit;
 }
+
 
 $roles    = $conn->query("SELECT * FROM roledata")->fetchAll(PDO::FETCH_ASSOC);
 $statuses = $conn->query("SELECT * FROM statusdata")->fetchAll(PDO::FETCH_ASSOC);
@@ -38,9 +40,18 @@ $classes  = $conn->query("SELECT * FROM classdata")->fetchAll(PDO::FETCH_ASSOC);
         <div class="row g-4">
           <!-- 頭像 -->
           <div class="col-12 col-md-4 text-center">
+            <?php
+            function headshot_url(?string $fn): string
+            {
+              if (!$fn) return "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
+              return "headshot/" . rawurlencode($fn);
+            }
+            $avatarPath = headshot_url($user['u_img']); ?>
             <img id="avatarPreview"
-              src="../headshot/<?= htmlspecialchars($user['u_img'] ?: 'default.jpg') ?>"
-              alt="" style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:4px solid rgba(0,0,0,.08);" class="mb-3 shadow-sm">
+              src="<?= htmlspecialchars($avatarPath) ?>"
+              alt="" 
+              style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:4px solid rgba(0,0,0,.08);" 
+              class="mb-3 shadow-sm">
             <input type="file" name="avatar" id="avatarInput" accept="image/*" class="form-control">
             <small class="text-secondary">建議 1:1 圖片，JPG/PNG/WebP</small>
             <input type="hidden" name="clear_avatar" id="clear_avatar" value="0">
@@ -146,7 +157,10 @@ $classes  = $conn->query("SELECT * FROM classdata")->fetchAll(PDO::FETCH_ASSOC);
       btn.disabled = true;
       if (window.Swal) Swal.showLoading();
 
-      const res = await fetch('pages/admin_updateuser.php', { method: 'POST', body: fd });
+      const res = await fetch('pages/admin_updateuser.php', {
+        method: 'POST',
+        body: fd
+      });
       const json = await res.json(); // 後端必須回 JSON
 
       if (json.ok) {
@@ -165,7 +179,7 @@ $classes  = $conn->query("SELECT * FROM classdata")->fetchAll(PDO::FETCH_ASSOC);
   });
 
   // ✅ 清除頭貼：用正確的 input id 與預設圖路徑
-  document.getElementById('btnClearAvatar').addEventListener('click', function (e) {
+  document.getElementById('btnClearAvatar').addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('clear_avatar').value = '1';
     const fi = document.getElementById('avatarInput');
