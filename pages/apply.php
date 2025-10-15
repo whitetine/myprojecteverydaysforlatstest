@@ -2,6 +2,12 @@
 session_start();
 require '../includes/pdo.php'; // 取得 $conn (PDO)
 ?>
+
+<script>
+    window.CURRENT_USER = <?= json_encode(['u_ID' => (string)($_SESSION['u_ID'] ?? '')], JSON_UNESCAPED_UNICODE) ?>;
+console.log('Server-side CURRENT_USER:', window.CURRENT_USER);
+</script>
+
 <header>
     <h2 class="mb-4">申請文件上傳</h2>
 </header>
@@ -34,7 +40,7 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
                             <input type="text"
                                 class="form-control"
                                 id="apply_user"
-                                :value="applyUser"
+                               :value="applyUser"
                                 readonly>
                             <!-- ----------- -->
 
@@ -112,7 +118,3 @@ require '../includes/pdo.php'; // 取得 $conn (PDO)
         </div>
     </div>
 </div>
-
-<script>
-    window.CURRENT_USER = <?= json_encode(['u_ID' => (string)($_SESSION['u_ID'] ?? '')], JSON_UNESCAPED_UNICODE) ?>;
-</script>

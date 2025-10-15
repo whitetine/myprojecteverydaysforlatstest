@@ -1,8 +1,11 @@
-const app = Vue.createApp({
-  //1015update
+  //1015update 16:36
+
+
+const applyModule={
   data() {
     return {
-      applyUser: window.CURRENT_USER.u_ID || '',
+      applyUser: window.CURRENT_USER? window.CURRENT_USER.u_ID || '':'',
+      // applyUser: '',
       applyOther: '',
       selectedFileID: '',
       imagePreview: '',
@@ -25,8 +28,6 @@ const app = Vue.createApp({
       }
 
       //----------
-
-
       try {
         const res = await fetch('pages/api/upload.php', { method: 'POST', body: fd });
         const data = await res.json();
@@ -57,7 +58,25 @@ const app = Vue.createApp({
         };
         reader.readAsDataURL(file);
       }
+    },
+    //1015update 09:21
+
+    async fetchFiles(){
+      try{
+        const res = await fetch('../api.php?do=get_files', {cache: 'no-stsore'});
+          const data = await res.json();
+          if(data && (data.rows ||data.data)){
+            this.files = data.rows ||data.data;
+          }else{
+            console.log('no files data received:',data)
+          }
+        
+      }catch(e){
+        console.error('failed to fetch files:',e);
+      }
     }
+
+    //-----------
 
   },
   watch:{
@@ -69,11 +88,16 @@ const app = Vue.createApp({
       }
     }
   },
+  created(){
+    this.applyUser = window.CURRENT_USER ? window.CURRENT_USER.u_ID ||'':'';
+    console.log('created = currrent user',window.CURRENT_USER ,'applyUser:', this.applyUser);
+  },
   mounted(){
     this.fetchFiles();
-  }
+
+    // this.applyUser = window.CURRENT_USER.u_ID ||'';
+    console.log('mounted user:',this.applyUser);
 
     //---------------
-
-});
-app.mount('#app');
+  }
+};
