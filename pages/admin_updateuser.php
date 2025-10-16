@@ -95,7 +95,8 @@ try {
 
   echo json_encode(['ok'=>true, 'msg'=>'更新完成']);
 } catch (Throwable $e) {
-  if ($conn && $conn->inTransaction()) $conn->rollBack();
+if ($conn && $conn->inTransaction()) $conn->rollBack();
   http_response_code(400);
-  echo json_encode(['ok'=>false, 'msg'=>$e->getMessage()]);
+  error_log("Update user error: " . $e->getMessage()); // 記錄錯誤
+  echo json_encode(['ok' => false, 'msg' => $e->getMessage()]);
 }

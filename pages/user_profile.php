@@ -196,15 +196,18 @@ $img = !empty($data['u_img'])
       }
     }
 
-    // ✅ 清除頭貼：用正確的 input id 與預設圖路徑
-    document.getElementById('btnClearAvatar').addEventListener('click', function(e) {
-      e.preventDefault();
-      document.getElementById('clear_avatar').value = '1';
-      const fi = document.getElementById('avatarInput');
-      if (fi) fi.value = '';
-      const img = document.getElementById('avatarPreview');
-      if (img) img.src = '../headshot/default.jpg'; // 用和上面預覽一致的相對路徑
-    });
+    // 清除頭貼：保留 icon，僅清除上傳檔案
+  document.getElementById('btnClearAvatar').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('clear_avatar').value = '1';
+    const avatarInput = document.getElementById('avatarInput');
+    if (avatarInput) avatarInput.value = ''; // 清空上傳檔案輸入
+    const defaultIcon = "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
+    const avatarPreview = document.getElementById('avatarPreview');
+    if (avatarPreview && avatarPreview.src !== defaultIcon) {
+      avatarPreview.src = defaultIcon; // 僅在非 icon 時恢復為 icon
+    }
+  });
   </script>
 
   <?php if (isset($_GET['error'])): ?>

@@ -149,42 +149,43 @@ $classes  = $conn->query("SELECT * FROM classdata")->fetchAll(PDO::FETCH_ASSOC);
 
   // 送出（AJAX）
   document.getElementById('editForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('btnSave');
-    const fd = new FormData(e.target);
+  e.preventDefault();
+  const btn = document.getElementById('btnSave');
+  const fd = new FormData(e.target);
 
-    try {
-      btn.disabled = true;
-      if (window.Swal) Swal.showLoading();
+  try {
+    btn.disabled = true;
+    if (window.Swal) Swal.showLoading();
 
-      const res = await fetch('pages/admin_updateuser.php', {
-        method: 'POST',
-        body: fd
-      });
-      const json = await res.json(); // 後端必須回 JSON
+    const res = await fetch('pages/admin_updateuser.php', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const json = await res.json();
 
-      if (json.ok) {
-        if (window.Swal) await Swal.fire('已更新', json.msg || '資料已更新', 'success');
-        location.hash = 'pages/admin_usermanage.php';
-        $('#content').load('pages/admin_usermanage.php', initPageScript);
-      } else {
-        if (window.Swal) Swal.fire('更新失敗', json.msg || '請稍後再試', 'error');
-      }
-    } catch (err) {
-      console.error(err);
-      if (window.Swal) Swal.fire('錯誤', '伺服器回應不是 JSON 或連線錯誤', 'error');
-    } finally {
-      btn.disabled = false;
+    if (json.ok) {
+      if (window.Swal) await Swal.fire('已更新', json.msg || '資料已更新', 'success');
+      location.hash = 'pages/admin_usermanage.php';
+      $('#content').load('pages/admin_usermanage.php');
+    } else {
+      if (window.Swal) Swal.fire('更新失敗', json.msg || '請稍後再試', 'error');
     }
-  });
+  } catch (err) {
+    console.error('Fetch error:', err);
+    if (window.Swal) Swal.fire('錯誤', err.message || '伺服器回應不是 JSON 或連線錯誤', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
 
-  // ✅ 清除頭貼：用正確的 input id 與預設圖路徑
-  document.getElementById('btnClearAvatar').addEventListener('click', function(e) {
+// 清除頭貼：保留 icon，僅清除上傳檔案
+  document.getElementById('btnClearAvatar').addEventListener('click', function (e) {
     e.preventDefault();
     document.getElementById('clear_avatar').value = '1';
-    const fi = document.getElementById('avatarInput');
-    if (fi) fi.value = '';
-    const img = document.getElementById('avatarPreview');
-    if (img) img.src = '../headshot/default.jpg'; // 用和上面預覽一致的相對路徑
+    const avatarInput = document.getElementById('avatarInput');
+    if (avatarInput) avatarInput.value = ''; // 清空上傳檔案輸入
+    const defaultIcon = "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
+    const avatarPreview = document.getElementById('avatarPreview');
+    if (avatarPreview && avatarPreview.src !== defaultIcon) {
+      avatarPreview.src = defaultIcon; // 僅在非 icon 時恢復為 icon
+    }
   });
 </script>
