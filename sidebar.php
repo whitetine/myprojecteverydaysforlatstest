@@ -115,6 +115,8 @@ $role_ID = $_SESSION['role_ID'] ?? null;
 
           <a class="nav-link ajax-link" href="pages/apply_preview.php">
       <i class="fa-solid fa-pen-to-square"></i><span>apply_preview</span></a>
+         <a class="nav-link ajax-link" href="pages/suggest.php">
+      <i class="fa-solid fa-pen-to-square"></i><span>suggest.php</span></a>
        <!-- <a class="nav-link ajax-link" href="pages/admin_notify.php">
       <i class="fa-solid fa-file-lines"></i><span>notify</span></a> -->
       <?php elseif ($role_ID == 6): ?>
