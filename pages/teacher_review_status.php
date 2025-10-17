@@ -21,7 +21,7 @@ $u_ID = $_SESSION['u_ID'];
 //取全部週次；預設選「當週」(is_active=1)，若沒有則選最新一週
 $periods = $conn->query("
   SELECT period_ID, period_title, period_start_d, period_end_d, is_active
-  FROM reviewperiods
+  FROM periodsdata
   ORDER BY period_start_d DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 

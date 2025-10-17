@@ -1,5 +1,4 @@
 <?php
-// suggest_admin.php — 期中期末建議（合理版卡片排版）
 session_start();
 require '../includes/pdo.php';
 date_default_timezone_set('Asia/Taipei');
@@ -186,7 +185,7 @@ textarea.form-control {
   }
 }</style> -->
 <!-- 引用外部 CSS -->
-<link rel="stylesheet" href="../css/suggest.css">
+<link rel="stylesheet" href="css/suggest.css">
 
 <div class="page-title">期中期末建議</div>
 
