@@ -45,7 +45,7 @@ switch ($do) {
         SELECT r.role_ID, r.role_name
         FROM userrolesdata ur
         JOIN roledata r ON ur.role_ID = r.role_ID
-        WHERE ur.u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
+        WHERE ur.ur_u_ID = '{$user["u_ID"]}' AND ur.user_role_status = 1
     "));
     $count = count($roles);
 
@@ -67,7 +67,7 @@ switch ($do) {
         echo json_encode(fetchAll(query("
             SELECT b.role_ID,b.role_name
             FROM userrolesdata a JOIN roledata b ON a.role_ID = b.role_ID
-            WHERE a.u_ID='{$u_ID}' AND a.user_role_status=1;
+            WHERE a.ur_u_ID='{$u_ID}' AND a.user_role_status=1;
         ")));
         break;
 
@@ -82,7 +82,7 @@ switch ($do) {
     case 'update_profile':
         $u_ID    = $p['u_ID'] ?? '';
         $gmail   = trim($p['u_gmail'] ?? '');
-        $profile = trim($p['profile'] ?? '');
+        $profile = trim($p['u_profile'] ?? '');
         $clear   = isset($p['clear_avatar']) && $p['clear_avatar'] === '1';
 
         if ($u_ID === '') {
